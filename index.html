@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>League of Legends Esports Stats - Step 1</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin-left: 40px;
+            margin-right: 40px;
+            margin-top: 30px;
+            background-color: white;
+            color: black;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 26px;
+        }
+
+        h3 {
+            font-size: 20px;
+        }
+
+        .step-title {
+            font-size: 22px; /* larger than body but smaller than title */
+            font-weight: bold;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>League of Legends Esports Stats</h1>
+
+<p><b>Name(s):</b> Nathan Park</p>
+<p><b>Website Link:</b> (your website link)</p>
+
+<br>
+
+<p class="step-title">Step 1: Introduction</p>
+
+<h2>Understanding the Dataset</h2>
+
+<p>
+This project uses a League of Legends esports match statistics dataset spanning multiple
+years from 2014 to 2026. The dataset contains both player-level observations and
+team-level summaries for each match played across various professional leagues.
+</p>
+
+<p>
+Since this project focuses on predicting match outcomes, the analysis will be conducted
+using team-level rows only, where each row represents the performance of one team in
+a single match. These rows contain a win/loss indicator that will serve as the response
+variable for prediction.
+</p>
+
+<h2>Potential Research Questions</h2>
+
+<ul>
+    <li>Does the number of kills a team secures correlate with their probability of winning?</li>
+    <li>Is gold advantage associated with match outcome?</li>
+    <li>Are teams that secure more objectives (towers, dragons) more likely to win?</li>
+    <li>Do certain leagues or regions exhibit higher win rates?</li>
+    <li>Which combination of performance metrics best predicts whether a team will win a match?</li>
+</ul>
+
+<h2>The Research Question</h2>
+
+<p>
+Which combination of performance metrics best predicts whether a team will win a match?
+</p>
+
+<h2>Why This Matters</h2>
+
+<p>
+Esports teams and analysts often seek to understand which measurable factors are most
+strongly associated with winning. Identifying the combination of performance metrics
+that best predicts match outcomes can help inform strategy, coaching decisions, and
+post-match analysis through data-driven insights.
+</p>
+
+<h2>Relevant Columns</h2>
+
+<ul>
+    <li><b>result</b>: Indicates whether a team won (1) or lost (0)</li>
+    <li><b>kills, deaths, assists</b>: Team combat performance</li>
+    <li><b>goldearned</b>: Total team gold</li>
+    <li><b>towers, inhibitors</b>: Structure objectives secured</li>
+    <li><b>dragons, barons</b>: Neutral objectives secured</li>
+    <li><b>visionscore</b>: Team vision control</li>
+</ul>
+
+<p>
+Total number of rows in team-level dataset: ________
+</p>
+
+<p>
+Number of relevant columns used for prediction: ________
+</p>
+
+
+<h2>Step 2: Data Cleaning and Exploratory Data Analysis</h2>
+
+<h3>Data Cleaning</h3>
+<p>
+The original dataset contains both player level and team level rows for each match. 
+Since the research question focuses on predicting whether a team wins a match based 
+on performance metrics, the dataset was filtered to include only team level 
+observations. Relevant columns such as kills, deaths, assists, goldat15, and 
+gamelength were retained for analysis.
+</p>
+
+<h3>Univariate Analysis</h3>
+<p>
+We first examined the distribution of key performance metrics to better understand 
+their variability across matches. The distribution of game length showed that most 
+professional matches tend to fall within a consistent duration range, indicating 
+relatively standardized pacing across competitive play.
+</p>
+
+<h3>Bivariate Analysis</h3>
+<p>
+To explore relationships between performance metrics and match outcomes, we 
+compared team kills and early gold advantage against match results. Teams that 
+won matches generally had higher kill counts and greater gold advantages at the 
+15 minute mark compared to teams that lost.
+</p>
+
+<iframe src="bivariate_kills_result.html" width="700" height="500"></iframe>
+<br><br>
+
+<iframe src="bivariate_gold15_result.html" width="700" height="500"></iframe>
+
+<h3>Interesting Aggregates</h3>
+<p>
+We also grouped the data by league to compute win rates and total number of games 
+played. This helps identify whether performance trends are consistent across 
+different competitive regions.
+</p>
+
+<iframe src="league_summary.html" width="700" height="300"></iframe>
+
+
+<h2>Step 3: Assessment of Missingness</h2>
+
+<h3>Step 3A: MNAR Analysis</h3>
+
+<p>
+I believe <b>visionscore</b> may be <b>MNAR</b> (Missing Not At Random).
+Vision score depends on warding and other vision actions that are driven by team strategy and in-game performance.
+If a team is far behind, they may place fewer wards and take fewer vision-related actions, which can lead to a lower or missing vision score.
+This means the probability that <b>visionscore</b> is missing may depend on the true (unobserved) value of <b>visionscore</b> itself, which is consistent with <b>MNAR</b>.
+</p>
+
+<p>
+To better explain this missingness and potentially make it closer to MAR, it would help to have additional data such as
+team gold difference over time, map control indicators, or a timeline of ward placements.
+These variables would capture game state and team behavior that could explain why vision activity (and therefore vision score) is missing.
+</p>
+
+<h3>Step 3B: Missingness Dependency</h3>
+
+<p>
+To study whether the missingness of <b>visionscore</b> depends on other variables, I created an indicator column:
+<b>visionscore_missing</b>, which is <b>True</b> when <b>visionscore</b> is missing and <b>False</b> otherwise.
+I then compared game outcomes and performance metrics between these two groups.
+</p>
+
+<p>
+The plot below compares the distribution of <b>kills</b> when <b>visionscore</b> is missing versus not missing.
+If the distributions differ noticeably, this suggests that missingness is not completely random and is associated with in-game performance.
+</p>
+
+<iframe
+  src="missingness_kills.html"
+  width="100%"
+  height="650"
+  style="border: 1px solid #ddd; border-radius: 6px;"
+></iframe>
+
+
+<h2>Step 4: Hypothesis Testing</h2>
+
+<h3>Hypotheses</h3>
+
+<p>
+We test whether early game gold advantage is associated with match outcome.
+</p>
+
+<p>
+<b>Null Hypothesis (H₀):</b>
+The average gold at 15 minutes is the same for winning teams and losing teams.
+</p>
+
+<p>
+<b>Alternative Hypothesis (H₁):</b>
+Winning teams have higher average gold at 15 minutes than losing teams.
+</p>
+
+<h3>Test Statistic</h3>
+
+<p>
+We use the difference in mean gold at 15 minutes between winning and losing teams
+as the test statistic. A permutation test was conducted using 1000 permutations
+with significance level α = 0.05.
+</p>
+
+<h3>Results</h3>
+
+<p>
+The resulting p-value from the permutation test was:
+<b>_____</b>
+</p>
+
+<p>
+Since this p-value is less than 0.05, we reject the null hypothesis and conclude
+that there is statistical evidence that winning teams tend to have higher gold
+at 15 minutes than losing teams.
+</p>
+
+<h3>Permutation Distribution</h3>
+
+<iframe
+  src="step4_permutation.html"
+  width="100%"
+  height="650"
+  style="border: 1px solid #ddd; border-radius: 6px;"
+></iframe>
+
+
+<hr>
+
+<h2>Step 5: Framing a Prediction Problem</h2>
+
+<h3>Prediction Problem</h3>
+<p>
+The goal of this project is to predict whether a team will win a professional League of Legends match
+based on team-level performance metrics recorded during the game.
+</p>
+
+<h3>Response Variable</h3>
+<p>
+The response variable is <b>result</b>, which indicates whether a team won or lost:
+</p>
+<ul>
+  <li><b>result = 1</b>: Win</li>
+  <li><b>result = 0</b>: Loss</li>
+</ul>
+
+<h3>Problem Type</h3>
+<p>
+This is a <b>binary classification</b> problem because the response variable has two possible outcomes
+(win or loss).
+</p>
+
+<h3>Features Used for Prediction</h3>
+<p>
+To predict <b>result</b>, I will use team-level performance metrics such as:
+</p>
+<ul>
+  <li><b>kills</b>, <b>deaths</b>, <b>assists</b></li>
+  <li><b>goldearned</b> (team economy)</li>
+  <li><b>towers</b>, <b>inhibitors</b> (structure objectives)</li>
+  <li><b>dragons</b>, <b>barons</b> (neutral objectives)</li>
+  <li><b>visionscore</b> (vision control)</li>
+</ul>
+
+<h3>Metric for Evaluating the Model</h3>
+<p>
+I will evaluate model performance using <b>accuracy</b> and <b>F1-score</b>.
+Accuracy is easy to interpret, while F1-score can be more informative if the classes are imbalanced
+because it accounts for both precision and recall.
+</p>
+
+<h3>Time of Prediction</h3>
+<p>
+The features listed above are performance statistics that are available by the end of a match.
+This project predicts match outcomes using these measurable in-game metrics, without using the
+result itself as an input feature.
+</p>
+
+
+<h3>Performance Comparison (Held-Out Test Set)</h3>
+
+<p>
+The baseline Logistic Regression model achieved:
+</p>
+
+<ul>
+  <li><b>Baseline Accuracy:</b> 0.8222</li>
+  <li><b>Baseline F1-score:</b> 0.8220</li>
+</ul>
+
+<p>
+After adding engineered features and switching to a Random Forest classifier with tuned
+hyperparameters, the final model achieved:
+</p>
+
+<ul>
+  <li><b>Final Accuracy:</b> 0.9553</li>
+  <li><b>Final F1-score:</b> 0.9554</li>
+</ul>
+
+<p>
+The final model substantially improves upon the baseline model on both accuracy and
+F1-score. This suggests that the engineered features better capture meaningful in-game
+advantages and that the Random Forest model is better able to model nonlinear
+relationships between performance metrics and match outcomes.
+</p>
+
+
+<!-- ===================================================== -->
+<!-- Step 8: Fairness Analysis                              -->
+<!-- ===================================================== -->
+
+<br>
+<p class="step-title">Step 8: Fairness Analysis</p>
+
+<h2>Fairness Question</h2>
+<p>
+Does my final model perform worse for teams in one league compared to teams in other leagues?
+To make this concrete, I compared model performance for teams in the <b>LCK</b> versus
+teams in <b>all other leagues</b>.
+</p>
+
+<h2>Groups</h2>
+<ul>
+  <li><b>Group X:</b> LCK teams</li>
+  <li><b>Group Y:</b> Non-LCK teams (all other leagues)</li>
+</ul>
+
+<h2>Evaluation Metric</h2>
+<p>
+This is a binary classification task (predicting <code>result</code>: win/loss), so I used the
+<b>F1-score</b> as my evaluation metric. F1-score is useful because it balances precision
+and recall, and it is a good choice when class imbalance may be present.
+</p>
+
+<h2>Null and Alternative Hypotheses</h2>
+<p>
+<b>Null Hypothesis (H<sub>0</sub>):</b> The model is fair across these groups; the difference in
+F1-score between LCK and non-LCK is approximately 0, and any observed difference is due to random chance.
+</p>
+<p>
+<b>Alternative Hypothesis (H<sub>1</sub>):</b> The model is not fair across these groups; the
+F1-score differs between LCK and non-LCK.
+</p>
+
+<h2>Test Statistic</h2>
+<p>
+My test statistic is the difference in F1-score between the two groups:
+</p>
+<p>
+<b>Test statistic:</b> F1(LCK) − F1(non-LCK)
+</p>
+
+<h2>Permutation Test Setup</h2>
+<p>
+To test fairness, I performed a permutation test. I kept the model predictions fixed, and
+randomly shuffled the <code>league</code> labels to simulate a world where league membership does not
+affect model performance. For each shuffle, I recomputed the F1-score difference between the
+two groups and compared it to the observed difference.
+</p>
+
+<h2>Results</h2>
+<ul>
+  <li><b>F1(LCK):</b> LCK_F1</li>
+  <li><b>F1(non-LCK):</b> NON_LCK_F1</li>
+  <li><b>Observed difference:</b> OBS_DIFF</li>
+  <li><b>Permutation test p-value:</b> P_VALUE</li>
+</ul>
+
+<h2>Conclusion</h2>
+<p>
+Using a significance level of <b>0.05</b>, the p-value is greater than 0.05, so I fail to reject the
+null hypothesis. The observed F1-score difference between LCK and non-LCK is small and is
+plausibly explained by random chance. Based on this test and metric, I do not have strong evidence
+that my model performs worse for one of these groups.
+</p>
+
+
+
+</body>
+</html>
+
