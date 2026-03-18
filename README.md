@@ -37,8 +37,8 @@ Esports teams and analysts often seek to understand which measurable factors are
 - **dragons, barons**: Neutral objectives secured  
 - **visionscore**: Team vision control  
 
-Total number of rows in team-level dataset: ________  
-Number of relevant columns used for prediction: ________  
+Total number of rows in team-level dataset: 190098  
+Number of relevant columns used for prediction: 9  
 
 ---
 
@@ -93,7 +93,7 @@ We test whether early game gold advantage is associated with match outcome.
 
 A permutation test was conducted using 1000 permutations with significance level α = 0.05.
 
-**p-value:** ______  
+**p-value:** < 0.001  
 
 Since this p-value is less than 0.05, we reject the null hypothesis and conclude that winning teams tend to have higher gold at 15 minutes.
 
