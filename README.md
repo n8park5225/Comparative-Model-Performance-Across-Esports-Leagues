@@ -56,15 +56,15 @@ We first examined the distribution of key performance metrics to better understa
 
 To explore relationships between performance metrics and match outcomes, we compared team kills and early gold advantage against match results. Teams that won matches generally had higher kill counts and greater gold advantages at the 15 minute mark compared to teams that lost.
 
-![Kills by Match Result](assets/bivariate_kills_result.png)
+<iframe src="assets/bivariate_kills_result.html" width="800" height="600" frameborder="0"></iframe>
 
-![Gold at 15 Minutes by Match Result](assets/bivariate_gold15_result.png)
+<iframe src="assets/bivariate_gold15_result.html" width="800" height="600" frameborder="0"></iframe>
 
 ### Interesting Aggregates
 
 We also grouped the data by league to compute win rates and total number of games played. This helps identify whether performance trends are consistent across different competitive regions.
 
-![League Summary](assets/league_summary.png)
+<iframe src="assets/league_summary.html" width="800" height="400" frameborder="0"></iframe>
 
 ---
 
@@ -76,9 +76,9 @@ To better explain this missingness and potentially make it closer to MAR, it wou
 
 To study whether the missingness of visionscore depends on other variables, I created an indicator column **visionscore_missing**, which is True when visionscore is missing and False otherwise. I then compared game outcomes and performance metrics between these two groups.
 
-The plot below compares the distribution of kills when visionscore is missing versus not missing. Differences in these distributions suggest that missingness is related to in-game performance.
+The plot below compares the distribution of kills when visionscore is missing versus not missing.
 
-![Missingness Analysis](assets/missingness_kills.png)
+<iframe src="assets/missingness_kills.html" width="800" height="600" frameborder="0"></iframe>
 
 ---
 
@@ -97,7 +97,7 @@ A permutation test was conducted using 1000 permutations with significance level
 
 Since this p-value is less than 0.05, we reject the null hypothesis and conclude that winning teams tend to have higher gold at 15 minutes.
 
-![Permutation Distribution](assets/step4_permutation.png)
+<iframe src="assets/step4_permutation.html" width="800" height="600" frameborder="0"></iframe>
 
 ---
 
@@ -196,10 +196,10 @@ A permutation test was conducted by shuffling league labels and recomputing the 
 
 ### Results
 
-- F1(LCK): LCK_F1  
-- F1(non-LCK): NON_LCK_F1  
-- Observed difference: OBS_DIFF  
-- p-value: P_VALUE  
+- **F1(LCK):** LCK_F1  
+- **F1(non-LCK):** NON_LCK_F1  
+- **Observed difference:** OBS_DIFF  
+- **p-value:** P_VALUE  
 
 ### Conclusion
 
